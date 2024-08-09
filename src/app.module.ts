@@ -7,7 +7,7 @@ import { SubCategoriesModule } from "./modules/sub-categories/sub-categories.mod
 import { CategoriesModule } from "./modules/categories/categories.module"
 import { ConfigModule, ConfigService } from "@nestjs/config"
 import { MorganMiddleware } from "./middlewares/morgan.middleware"
-import { ContactsModule } from "./contacts/contacts.module"
+import { ContactsModule } from "./modules/contacts/contacts.module"
 
 @Module({
   imports: [
