@@ -22,10 +22,8 @@ import { ContactsModule } from "./modules/contacts/contacts.module"
         const host = configService.get<string>("MONGODB_HOST")
         const port = configService.get<string>("MONGODB_PORT")
         const database = configService.get<string>("MONGODB_DB")
-
         return {
-          uri: `mongodb://${user}:${pass}@${host}:${port}`,
-          dbName: database,
+          uri: `mongodb://${user}:${pass}@${host}:${port}/${database}`,
         }
       },
       inject: [ConfigService],
