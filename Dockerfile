@@ -1,28 +1,51 @@
-FROM node:20-alpine as builder
+FROM node:20-alpine as base
 
 ENV NODE_ENV build
+# Install dependencies only when needed
+FROM base AS deps
+RUN apk add --no-cache libc6-compat
+WORKDIR /app
 
-USER node
-WORKDIR /home/node
+COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
+RUN \
+  if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
+  elif [ -f package-lock.json ]; then npm ci; \
+  elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm i --frozen-lockfile; \
+  else echo "Lockfile not found." && exit 1; \
+  fi
 
-COPY package*.json ./
-RUN npm ci
+# Rebuild the source code only when needed
+FROM base AS builder
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
 
-COPY --chown=node:node . .
+RUN \
+  if [ -f yarn.lock ]; then yarn run build; \
+  elif [ -f package-lock.json ]; then npm run build; \
+  elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm run build; \
+  else echo "Lockfile not found." && exit 1; \
+  fi
 
-RUN npm run build
-
-
-FROM builder as runner
+# Production image, copy all the files and run next
+FROM base AS runner
+WORKDIR /app
 
 ENV NODE_ENV production
 
-USER node
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nestjs
 
-WORKDIR /home/node
+COPY --from=builder /app/public ./public
 
-COPY --from=builder --chown=node:node /home/node/package*.json ./
-COPY --from=builder --chown=node:node /home/node/node_modules/ ./node_modules/
-COPY --from=builder --chown=node:node /home/node/dist/ ./dist/
+COPY --from=builder --chown=nestjs:nodejs /app/package*.json ./
+COPY --from=builder --chown=nestjs:nodejs /app/node_modules/ ./node_modules/
+COPY --from=builder --chown=nestjs:nodejs /app/dist/ ./dist/
 
-CMD ["node", "dist/main.js"]
+USER nestjs
+
+EXPOSE 3000
+
+ENV PORT=3000
+
+CMD HOSTNAME="0.0.0.0" node dist/main.js
