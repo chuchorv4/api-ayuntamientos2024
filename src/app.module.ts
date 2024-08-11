@@ -10,6 +10,7 @@ import { MorganMiddleware } from "./middlewares/morgan.middleware"
 import { ContactsModule } from "./modules/contacts/contacts.module"
 import { UploadsModule } from "./modules/uploads/uploads.module"
 import { TypesModule } from "./modules/types/types.module"
+import { OriginsModule } from "./modules/origins/origins.module"
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { TypesModule } from "./modules/types/types.module"
     ContactsModule,
     UploadsModule,
     TypesModule,
+    OriginsModule,
   ],
 })
 export class AppModule implements NestModule {

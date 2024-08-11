@@ -29,6 +29,7 @@ export class TypesService {
   async update(id: string, updateTypeDto: UpdateTypeDto): Promise<Type> {
     const existingType = await this.typeModel
       .findByIdAndUpdate(id, updateTypeDto, { new: true })
+      .where("isActive")
       .exec()
 
     if (!existingType) {
@@ -40,6 +41,7 @@ export class TypesService {
   async remove(id: string): Promise<Type> {
     const type = this.typeModel
       .findByIdAndUpdate(id, { isActive: false })
+      .where("isActive")
       .exec()
     if (!type) {
       throw new NotFoundException(`Type with ID ${id} not found`)
