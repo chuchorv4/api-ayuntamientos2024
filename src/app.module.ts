@@ -8,6 +8,8 @@ import { CategoriesModule } from "./modules/categories/categories.module"
 import { ConfigModule, ConfigService } from "@nestjs/config"
 import { MorganMiddleware } from "./middlewares/morgan.middleware"
 import { ContactsModule } from "./modules/contacts/contacts.module"
+import { UploadsModule } from "./modules/uploads/uploads.module"
+import { TypesModule } from "./modules/types/types.module"
 
 @Module({
   imports: [
@@ -34,6 +36,8 @@ import { ContactsModule } from "./modules/contacts/contacts.module"
     SubCategoriesModule,
     CategoriesModule,
     ContactsModule,
+    UploadsModule,
+    TypesModule,
   ],
 })
 export class AppModule implements NestModule {

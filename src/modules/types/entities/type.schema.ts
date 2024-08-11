@@ -1,22 +1,13 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose"
-import { Document } from "mongoose"
+import { Document, Types } from "mongoose"
 
 @Schema()
-export class Domain extends Document {
+export class Type extends Document {
   @Prop({ required: true })
   name: string
 
   @Prop({ required: true })
-  url: string
-
-  @Prop()
-  description: string
-
-  @Prop()
-  favicon: string
-
-  @Prop()
-  logo: string
+  origin: Types.ObjectId
 
   @Prop({ default: true, select: false })
   isActive: boolean
@@ -25,4 +16,4 @@ export class Domain extends Document {
   __v: number
 }
 
-export const DomainSchema = SchemaFactory.createForClass(Domain)
+export const TypeSchema = SchemaFactory.createForClass(Type)
