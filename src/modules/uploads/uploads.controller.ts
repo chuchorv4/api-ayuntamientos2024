@@ -6,6 +6,7 @@ export class UploadsController {
   @Post()
   @UseInterceptors(FileInterceptor("file"))
   uploadFile(@UploadedFile() file: Express.Multer.File) {
+    console.log(file)
     return {
       originalname: file.originalname,
       filename: file.filename,

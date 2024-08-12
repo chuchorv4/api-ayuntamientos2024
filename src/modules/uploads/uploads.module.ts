@@ -3,8 +3,9 @@ import { MulterModule } from "@nestjs/platform-express"
 import { UploadsService } from "./uploads.service"
 import { UploadsController } from "./uploads.controller"
 import { diskStorage } from "multer"
-import path from "node:path"
-import fs from "node:fs"
+// eslint-disable-next-line unicorn/import-style
+import * as path from "node:path"
+import * as fs from "node:fs"
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import fs from "node:fs"
           callback(null, uploadDirectory)
         },
         filename: (_request, file, callback) => {
+          console.log("file", file)
           const uniqueSuffix =
             Date.now() + "-" + Math.round(Math.random() * 1e9)
           callback(
